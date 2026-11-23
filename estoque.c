@@ -1,11 +1,21 @@
 #include <stdio.h>
+#include <string.h>
 
-int main() {
+int main()
+{
     int opcao = 0;
     int Qprodutos = 0;
-    int idproduto[100];
+    int totalCadastrados = 0;
+    int idproduto[40];
+    int idrepetido = 0;
+    char nomeproduto[40][60];
+    char categoria[40][40];
+    float preco[40];
+    int estoque[40];
+    int entradas[40][4];
 
-    do {
+    do
+    {
         printf("====================================\n");
         printf("          MENU DO ESTOQUE\n");
         printf("====================================\n");
@@ -21,59 +31,176 @@ int main() {
 
         scanf("%d", &opcao);
 
-        switch (opcao) {
-            case 1:
-                printf("qual a quantidade de produtos a serem registrados?\n");
+        switch (opcao)
+        {
+        case 1:
+            if (totalCadastrados >= 40)
+            {
+                printf("Limite maximo de 40 produtos ja atingido!\n");
+            }
+            else
+            {
+                printf("Qual a quantidade de produtos a serem registrados? (Disponivel: %d)\n", 40 - totalCadastrados);
                 scanf("%d", &Qprodutos);
-                while(Qprodutos < 1 || Qprodutos > 40){
-                    printf("Quantidade nao aceita, tente novamente digitando um numero entre 1 e 40 ;D\n");
+                while (Qprodutos < 1 || totalCadastrados + Qprodutos > 40)
+                {
+                    printf("Quantidade nao aceita, digite um numero entre 1 e %d:\n", 40 - totalCadastrados);
                     scanf("%d", &Qprodutos);
                 }
-                for (int i = 0; i < Qprodutos; i++)
+
+                for (int i = totalCadastrados; i < totalCadastrados + Qprodutos; i++)
                 {
-                    printf("Digite o ID do produto, no qual seja maior que zero e unico!\n");
+                    printf("\n--- Produto %d ---\n", i + 1);
+                    printf("Digite o ID do produto (maior que zero e unico):\n");
                     scanf("%d", &idproduto[i]);
-                    while(idproduto[i] < 0){
-                        printf("ID não permitido\n");
+                    idrepetido = 0;
+                    for (int j = 0; j < i; j++)
+                    {
+                        if (idproduto[i] == idproduto[j])
+                        {
+                            idrepetido = 1;
+                        }
+                    }
+
+                    while (idproduto[i] <= 0 || idrepetido == 1)
+                    {
+                        printf("ID nao permitido ou ja existente! Digite um ID valido:\n");
                         scanf("%d", &idproduto[i]);
-                    
+                        idrepetido = 0;
+                        for (int j = 0; j < i; j++)
+                        {
+                            if (idproduto[i] == idproduto[j])
+                            {
+                                idrepetido = 1;
+                            }
+                        }
+                    }
+
+                    while (getchar() != '\n');
+
+                    printf("Digite o nome do produto (nao deixe vazio):\n");
+                    fgets(nomeproduto[i], 60, stdin);
+
+                    int contadorletra = 0;
+                    for (int k = 0; nomeproduto[i][k] != '\0'; k++)
+                    {
+                        if (nomeproduto[i][k] == '\n')
+                        {
+                            nomeproduto[i][k] = '\0';
+                        }
+                        else if (nomeproduto[i][k] != ' ')
+                        {
+                            contadorletra++;
+                        }
+                    }
+
+                    while (contadorletra == 0)
+                    {
+                        printf("Nome vazio nao permitido! Digite um nome valido:\n");
+                        fgets(nomeproduto[i], 60, stdin);
+
+                        contadorletra = 0;
+                        for (int k = 0; nomeproduto[i][k] != '\0'; k++)
+                        {
+                            if (nomeproduto[i][k] == '\n')
+                            {
+                                nomeproduto[i][k] = '\0';
+                            }
+                            else if (nomeproduto[i][k] != ' ')
+                            {
+                                contadorletra++;
+                            }
+                        }
+                    }
+
+                    printf("Digite o preco do produto:\n");
+                    scanf("%f", &preco[i]);
+                    while (preco[i] <= 0)
+                    {
+                        printf("Preco invalido, precisa ser maior que 0 reais. Tente novamente:\n");
+                        scanf("%f", &preco[i]);
+                    }
+
+                    while (getchar() != '\n');
+
+                    printf("Digite a categoria do produto (ex.: Eletronico, Alimento, Vestuario, Outro):\n");
+                    fgets(categoria[i], 40, stdin);
+
+                    contadorletra = 0;
+                    for (int k = 0; categoria[i][k] != '\0'; k++)
+                    {
+                        if (categoria[i][k] == '\n')
+                        {
+                            categoria[i][k] = '\0';
+                        }
+                        else if (categoria[i][k] != ' ')
+                        {
+                            contadorletra++;
+                        }
+                    }
+
+                    while (contadorletra == 0)
+                    {
+                        printf("Categoria vazia nao permitida! Digite uma categoria valida:\n");
+                        fgets(categoria[i], 40, stdin);
+
+                        contadorletra = 0;
+                        for (int k = 0; categoria[i][k] != '\0'; k++)
+                        {
+                            if (categoria[i][k] == '\n')
+                            {
+                                categoria[i][k] = '\0';
+                            }
+                            else if (categoria[i][k] != ' ')
+                            {
+                                contadorletra++;
+                            }
+                        }
+                    }
+
+                    estoque[i] = 0;
+                    for (int m = 0; m < 4; m++)
+                    {
+                        entradas[i][m] = -1;
                     }
                 }
-                
-                printf("oi\n");
-                break;
 
-            case 2:
-                // Registrar entradas mensais de um produto
-                break;
+                totalCadastrados += Qprodutos;
+                printf("\nCadastro concluido com sucesso! Total de produtos no sistema: %d\n", totalCadastrados);
+            }
+            break;
 
-            case 3:
-                // Registrar quantidade atual em estoque
-                break;
+        case 2:
+            // Registrar entradas mensais de um produto
+            break;
 
-            case 4:
-                // Listar todos os produtos (resumo)
-                break;
+        case 3:
+            // Registrar quantidade atual em estoque
+            break;
 
-            case 5:
-                // Exibir ficha completa de um produto
-                break;
+        case 4:
+            // Listar todos os produtos (resumo)
+            break;
 
-            case 6:
-                // Estatisticas do estoque
-                break;
+        case 5:
+            // Exibir ficha completa de um produto
+            break;
 
-            case 7:
-                // Ranking (Top 5 produtos com maior estoque)
-                break;
+        case 6:
+            // Estatisticas do estoque
+            break;
 
-            case 8:
-                printf("Encerrando o programa...\n");
-                break;
+        case 7:
+            // Ranking (Top 5 produtos com maior estoque)
+            break;
 
-            default:
-                printf("Opcao invalida! Digite um numero entre 1 e 8.\n");
-                break;
+        case 8:
+            printf("Encerrando o programa...\n");
+            break;
+
+        default:
+            printf("Opcao invalida! Digite um numero entre 1 e 8.\n");
+            break;
         }
     } while (opcao != 8);
 
