@@ -13,6 +13,7 @@ int main()
     float preco[40];
     int estoque[40];
     int entradas[40][4];
+    int idEntrada;
 
     do
     {
@@ -171,7 +172,45 @@ int main()
             break;
 
         case 2:
-            // Registrar entradas mensais de um produto
+            if (totalCadastrados == 0)
+            {
+                printf("Nenhum produto cadastrado ainda! Cadastre produtos na Opcao 1 primeiro.\n");
+            }
+            else
+            {
+                printf("Digite o ID do produto que deseja: \n");
+                scanf("%d", &idEntrada);
+                int pos = -1;
+                for (int i = 0; i < totalCadastrados ; i++)
+                {
+                    if (idproduto[i] == idEntrada)
+                    {
+                        pos = i;
+                    }
+                    
+                }
+                if(pos == -1){
+                    printf("O produto solicitado não existe!! ;P\n");
+                }
+                else
+{
+    printf("\nRegistrando entradas mensais para: %s\n", nomeproduto[pos]);
+    for (int m = 0; m < 4; m++)
+    {
+        printf("Digite a quantidade de entrada do Mes %d: ", m + 1);
+        scanf("%d", &entradas[pos][m]);
+
+        while (entradas[pos][m] < 0)
+        {
+            printf("Valor invalido! Digite um numero maior ou igual a zero para o Mes %d: ", m + 1);
+            scanf("%d", &entradas[pos][m]);
+        }
+    }
+    printf("Entradas mensais atualizadas com sucesso!\n");
+}
+                
+            }
+            
             break;
 
         case 3:
